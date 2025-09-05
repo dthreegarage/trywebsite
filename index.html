@@ -1,1035 +1,523 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D3 Garage - Sector 86, Faridabad | Car Detailing & Servicing</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #0a0a0a;
-            color: #ffffff;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
-        header {
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(237, 24, 27, 0.3);
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            height: 50px;
-            width: auto;
-            background-color: #ed181b;
-            padding: 10px;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            text-align: center;
-            line-height: 30px;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-menu a {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-        }
-
-        .nav-menu a:hover {
-            color: #ed181b;
-            background-color: rgba(237, 24, 27, 0.1);
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
-            padding: 120px 0 80px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(237, 24, 27, 0.1) 0%, transparent 70%);
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #ed181b;
-            text-shadow: 0 0 20px rgba(237, 24, 27, 0.8);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 20px rgba(237, 24, 27, 0.8); }
-            to { text-shadow: 0 0 30px rgba(237, 24, 27, 1), 0 0 40px rgba(237, 24, 27, 0.8); }
-        }
-
-        .hero p {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            color: #cccccc;
-        }
-
-        .cta-button {
-            background: linear-gradient(45deg, #ed181b, #ff2729);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(237, 24, 27, 0.4);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(237, 24, 27, 0.6);
-        }
-
-        /* Sections */
-        section {
-            padding: 80px 0;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #ed181b;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(45deg, #ed181b, #ff2729);
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        /* Services Grid */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .service-card {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid #333;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(237, 24, 27, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .service-card:hover::before {
-            left: 100%;
-        }
-
-        .service-card:hover {
-            border-color: #ed181b;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(237, 24, 27, 0.2);
-        }
-
-        .service-card h3 {
-            color: #ed181b;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .service-prices {
-            display: flex;
-            justify-content: space-between;
-            margin: 1rem 0;
-            background: #000;
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        .price-item {
-            text-align: center;
-        }
-
-        .price-item .label {
-            font-size: 0.9rem;
-            color: #ccc;
-        }
-
-        .price-item .price {
-            font-size: 1.2rem;
-            color: #ed181b;
-            font-weight: bold;
-        }
-
-        .service-includes {
-            margin-top: 1rem;
-        }
-
-        .service-includes h4 {
-            color: #ed181b;
-            margin-bottom: 0.5rem;
-        }
-
-        .service-includes ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .service-includes li {
-            padding: 2px 0;
-            color: #ccc;
-            position: relative;
-            padding-left: 20px;
-        }
-
-        .service-includes li::before {
-            content: '✓';
-            color: #ed181b;
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-        }
-
-        /* Why Choose Section */
-        .reasons-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .reason-card {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid #333;
-            transition: all 0.3s ease;
-        }
-
-        .reason-card:hover {
-            border-color: #ed181b;
-            transform: translateY(-3px);
-        }
-
-        .reason-icon {
-            font-size: 2rem;
-            color: #ed181b;
-            margin-bottom: 1rem;
-        }
-
-        /* Contact & Form */
-        .contact-section {
-            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-        }
-
-        .contact-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: start;
-        }
-
-        .contact-info h3 {
-            color: #ed181b;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .contact-item {
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: rgba(237, 24, 27, 0.1);
-            border-radius: 8px;
-            border-left: 4px solid #ed181b;
-        }
-
-        .contact-item h4 {
-            color: #ed181b;
-            margin-bottom: 0.5rem;
-        }
-
-        .enquiry-form {
-            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid #333;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #ed181b;
-            font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            background: #000;
-            color: #fff;
-            font-size: 1rem;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #ed181b;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .submit-button {
-            width: 100%;
-            background: linear-gradient(45deg, #ed181b, #ff2729);
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .submit-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(237, 24, 27, 0.4);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero h2 {
-                font-size: 1.5rem;
-            }
-
-            .hero p {
-                font-size: 1.2rem;
-            }
-
-            .contact-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-menu {
-                gap: 1rem;
-            }
-
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .reasons-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-        }
-
-        .scroll-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #ed181b;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .scroll-to-top.visible {
-            opacity: 1;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>D3 Garage - Sector 86, Faridabad</title>
+<style>
+  /* Basic Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background-color: #000000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    line-height: 1.6;
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  /* Header Styles */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: #111;
+    border-bottom: 3px solid #ed181b;
+    box-shadow: 0 2px 10px rgba(237, 24, 27, 0.3);
+  }
+  
+  header img {
+    height: 60px;
+    width: auto;
+  }
+  
+  nav a {
+    color: #fff;
+    margin-left: 2.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+    position: relative;
+  }
+  
+  nav a:hover {
+    color: #ed181b;
+  }
+  
+  nav a:hover::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ed181b;
+  }
+  
+  /* Main Content */
+  main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  /* Home Header */
+  .home-header {
+    text-align: center;
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #111 0%, #222 100%);
+    border-radius: 10px;
+    margin-bottom: 3rem;
+  }
+  
+  .home-header h1 {
+    font-size: 3rem;
+    letter-spacing: 0.1rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    font-weight: 800;
+  }
+  
+  .home-header h2 {
+    font-size: 1.8rem;
+    color: #ed181b;
+    text-shadow: 0 0 15px #ed181b;
+    margin-bottom: 1rem;
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes glow {
+    from { text-shadow: 0 0 15px #ed181b; }
+    to { text-shadow: 0 0 25px #ed181b, 0 0 35px #ed181b; }
+  }
+  
+  .home-header p {
+    font-size: 1.3rem;
+    letter-spacing: 0.05rem;
+    color: #ccc;
+    margin-bottom: 2rem;
+  }
+  
+  .cta-button {
+    background: linear-gradient(45deg, #ed181b, #ff2d2d);
+    color: #fff;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(237, 24, 27, 0.4);
+    display: inline-block;
+    text-transform: uppercase;
+  }
+  
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(237, 24, 27, 0.6);
+  }
+  
+  /* Section Styles */
+  section {
+    margin-top: 4rem;
+  }
+  
+  section h2 {
+    color: #ed181b;
+    border-bottom: 3px solid #ed181b;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+    position: relative;
+  }
+  
+  section h2::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, #ed181b, transparent);
+  }
+  
+  /* Services List */
+  .services-list {
+    list-style: none;
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .services-list li {
+    background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border-left: 4px solid #ed181b;
+    transition: transform 0.3s ease;
+  }
+  
+  .services-list li:hover {
+    transform: translateX(5px);
+  }
+  
+  .services-list li h3 {
+    color: #ed181b;
+    margin-bottom: 0.8rem;
+    font-size: 1.3rem;
+  }
+  
+  .services-list li p,
+  .services-list li ul {
+    color: #ddd;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  .services-list li ul {
+    list-style: none;
+    margin: 0.5rem 0;
+    padding-left: 1rem;
+  }
+  
+  .services-list li ul li {
+    background: none;
+    padding: 0.2rem 0;
+    border: none;
+    position: relative;
+  }
+  
+  .services-list li ul li:before {
+    content: '•';
+    color: #ed181b;
+    font-weight: bold;
+    position: absolute;
+    left: -1rem;
+  }
+  
+  .services-list li ul li:hover {
+    transform: none;
+  }
+  
+  /* Why Choose Grid */
+  .why-choose {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .reason {
+    background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+    padding: 1.5rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #ccc;
+    position: relative;
+    border: 1px solid #333;
+    transition: all 0.3s ease;
+  }
+  
+  .reason:hover {
+    border-color: #ed181b;
+    transform: translateY(-5px);
+  }
+  
+  .reason::before {
+    content: "✓";
+    color: #ed181b;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-right: 0.8rem;
+  }
+  
+  /* Contact Section */
+  #contact p {
+    color: #ccc;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Form Styles */
+  form {
+    background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 2rem;
+    border: 1px solid #333;
+  }
+  
+  form h3 {
+    color: #ed181b;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+  
+  form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #fff;
+  }
+  
+  form input,
+  form select,
+  form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1.2rem;
+    border: 2px solid #333;
+    border-radius: 6px;
+    background-color: #222;
+    color: #fff;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  form input:focus,
+  form select:focus,
+  form textarea:focus {
+    outline: none;
+    border-color: #ed181b;
+    box-shadow: 0 0 10px rgba(237, 24, 27, 0.3);
+  }
+  
+  form select {
+    cursor: pointer;
+  }
+  
+  form textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  form button {
+    background: linear-gradient(45deg, #ed181b, #ff2d2d);
+    color: #fff;
+    border: none;
+    padding: 1rem 2rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+  }
+  
+  form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(237, 24, 27, 0.4);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    nav a {
+      margin: 0 1rem;
+    }
+    
+    .home-header h1 {
+      font-size: 2rem;
+    }
+    
+    .home-header h2 {
+      font-size: 1.3rem;
+    }
+    
+    main {
+      padding: 0 0.5rem;
+    }
+  }
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <nav class="container">
-            <div class="logo">D3 LOGO</div>
-            <ul class="nav-menu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#services">Our Services</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>D3 GARAGE — SECTOR 86, FARIDABAD</h1>
-                <h2>Free Pickup & Drop within 5km</h2>
-                <p>Detailing | Servicing | Denting & Painting | Insurance</p>
-                <button class="cta-button" onclick="document.getElementById('enquiry-form').scrollIntoView()">Book Your Service</button>
-            </div>
-        </div>
+  <header>
+    <img src="logo.jpg" alt="D3 Garage Logo" />
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#services">Our Services</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+  
+  <main>
+    <section class="home-header" id="home">
+      <h1>D3 GARAGE — SECTOR 86, FARIDABAD</h1>
+      <h2>Free Pickup & Drop within 5km</h2>
+      <p>Detailing | Servicing | Denting & Painting | Insurance</p>
+      <button class="cta-button" onclick="document.getElementById('enquiry-form').scrollIntoView({ behavior: 'smooth' });">Book your service</button>
     </section>
-
-    <!-- Services Section -->
+    
     <section id="services">
-        <div class="container">
-            <h2 class="section-title">Our Services</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <h3>1. Car Washing</h3>
-                    <div class="service-prices">
-                        <div class="price-item">
-                            <div class="label">Small Car</div>
-                            <div class="price">₹400</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Mid Car</div>
-                            <div class="price">₹500</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Big Car</div>
-                            <div class="price">₹600</div>
-                        </div>
-                    </div>
-                    <div class="service-includes">
-                        <h4>What's Included:</h4>
-                        <ul>
-                            <li>Interior vacuuming</li>
-                            <li>Foot mat cleaning</li>
-                            <li>Foam wash</li>
-                            <li>Underbody cleaning</li>
-                            <li>Glass cleaning</li>
-                            <li>Complete interior polishing</li>
-                            <li>Tyre & exterior black plastic part polishing</li>
-                        </ul>
-                    </div>
-                    <p><strong>Duration:</strong> 40 mins to 1.20 hrs</p>
-                </div>
-
-                <div class="service-card">
-                    <h3>2. Car Washing + 3M Wax</h3>
-                    <div class="service-prices">
-                        <div class="price-item">
-                            <div class="label">Small Car</div>
-                            <div class="price">₹800</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Mid Car</div>
-                            <div class="price">₹1000</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Big Car</div>
-                            <div class="price">₹1200</div>
-                        </div>
-                    </div>
-                    <div class="service-includes">
-                        <h4>What's Included:</h4>
-                        <ul>
-                            <li>All Car Washing services</li>
-                            <li>Complete exterior body wax coating with 3M Cream Wax</li>
-                        </ul>
-                    </div>
-                    <p><strong>Duration:</strong> 1 to 1.30 hrs</p>
-                </div>
-
-                <div class="service-card">
-                    <h3>3. Dry Cleaning</h3>
-                    <div class="service-prices">
-                        <div class="price-item">
-                            <div class="label">Small Car</div>
-                            <div class="price">₹1500</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Mid Car</div>
-                            <div class="price">₹2000</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Big Car</div>
-                            <div class="price">₹2500</div>
-                        </div>
-                    </div>
-                    <div class="service-includes">
-                        <h4>What's Included:</h4>
-                        <ul>
-                            <li>Seat removal & Floor carpet deep clean</li>
-                            <li>Roof & headliner cleaning</li>
-                            <li>Dashboard & console detailed cleaning</li>
-                            <li>Door panels & all interior plastics cleaning</li>
-                            <li>Boot/trunk full sanitization</li>
-                            <li>AC vents cleaning</li>
-                            <li>Stain treatment & chemical wash</li>
-                            <li>Complete sanitization</li>
-                            <li>Exterior car wash included as bonus</li>
-                        </ul>
-                    </div>
-                    <p><strong>Duration:</strong> 4 to 5 hrs</p>
-                </div>
-
-                <div class="service-card">
-                    <h3>4. Dry Cleaning + Floor Mat Removal</h3>
-                    <div class="service-prices">
-                        <div class="price-item">
-                            <div class="label">Small Car</div>
-                            <div class="price">₹2000</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Mid Car</div>
-                            <div class="price">₹2500</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Big Car</div>
-                            <div class="price">₹3000</div>
-                        </div>
-                    </div>
-                    <div class="service-includes">
-                        <h4>What's Included:</h4>
-                        <ul>
-                            <li>All Dry Cleaning services</li>
-                            <li>Floor carpet removal, cleaning & drying</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="service-card">
-                    <h3>5. Scratch Removal + Wax Coating</h3>
-                    <div class="service-prices">
-                        <div class="price-item">
-                            <div class="label">Small Car</div>
-                            <div class="price">₹2000</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Mid Car</div>
-                            <div class="price">₹2500</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Big Car</div>
-                            <div class="price">₹3000</div>
-                        </div>
-                    </div>
-                    <div class="service-includes">
-                        <h4>What's Included:</h4>
-                        <ul>
-                            <li>3M clay wash</li>
-                            <li>3M rubbing compound</li>
-                            <li>3M polishing compound</li>
-                            <li>Exterior & Interior wash</li>
-                            <li>3M wax coating</li>
-                            <li>6-Month shine warranty coverage</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="service-card">
-                    <h3>6. Anti-Rust Underbody Coating</h3>
-                    <div class="service-prices">
-                        <div class="price-item">
-                            <div class="label">Small Car</div>
-                            <div class="price">₹2000</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Mid Car</div>
-                            <div class="price">₹3000</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Big Car</div>
-                            <div class="price">₹4000</div>
-                        </div>
-                    </div>
-                    <div class="service-includes">
-                        <h4>What's Included:</h4>
-                        <ul>
-                            <li>Underbody cleaning & preparation</li>
-                            <li>Rust inspection & treatment</li>
-                            <li>3M anti-rust primer application</li>
-                            <li>3M underbody coating</li>
-                            <li>Complete underbody protection</li>
-                            <li>2-3 years of coating life</li>
-                            <li>1 Year warranty coverage</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="service-card">
-                    <h3>7. Trim Coating (1-3 weeks)</h3>
-                    <div class="service-prices">
-                        <div class="price-item">
-                            <div class="label">All Car Sizes</div>
-                            <div class="price">₹500</div>
-                        </div>
-                    </div>
-                    <div class="service-includes">
-                        <h4>What's Included:</h4>
-                        <ul>
-                            <li>All black plastic parts coverage</li>
-                            <li>Plastic cleaning & degreasing</li>
-                            <li>Surface preparation</li>
-                            <li>Black plastic restorer application</li>
-                            <li>Deep penetration treatment</li>
-                            <li>UV protection coating</li>
-                            <li>3-4 weeks of coating life</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="service-card">
-                    <h3>8. Trim Coating (4-6 months)</h3>
-                    <div class="service-prices">
-                        <div class="price-item">
-                            <div class="label">Small Car</div>
-                            <div class="price">₹2000</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Mid Car</div>
-                            <div class="price">₹2500</div>
-                        </div>
-                        <div class="price-item">
-                            <div class="label">Big Car</div>
-                            <div class="price">₹3000</div>
-                        </div>
-                    </div>
-                    <div class="service-includes">
-                        <h4>What's Included:</h4>
-                        <ul>
-                            <li>All Trim Coating services</li>
-                            <li>5-6 months of coating life</li>
-                            <li>Free maintenance if coating fades within 4 months</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="service-card">
-                    <h3>Car Servicing</h3>
-                    <div style="text-align: center; margin: 1rem 0;">
-                        <div style="color: #ed181b; font-size: 1.2rem; font-weight: bold;">Service Centre Quality. Genuine Care. Affordable Prices.</div>
-                        <div style="color: #ccc; margin-top: 0.5rem;">Fast turnaround – average service completion in just 2–3 hours</div>
-                    </div>
-                    <div class="service-includes">
-                        <h4>What's Included:</h4>
-                        <ul>
-                            <li>Engine oil replacement</li>
-                            <li>Oil filter replacement</li>
-                            <li>Air filter cleaning/replacement</li>
-                            <li>Spark plug check</li>
-                            <li>Coolant top-up</li>
-                            <li>Brake fluid top-up</li>
-                            <li>Wiper fluid top-up</li>
-                            <li>AC filter replacement</li>
-                            <li>Fuel filter check</li>
-                            <li>Brake pad check</li>
-                            <li>AC cooling check</li>
-                            <li>Throttle body cleaning</li>
-                            <li>FREE interior + exterior car wash</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <h2>Our Services</h2>
+      <ul class="services-list">
+        <li>
+          <h3>Car Washing</h3>
+          <p><strong>Duration:</strong> 40 mins to 1.20 hrs</p>
+          <p><strong>Includes:</strong></p>
+          <ul>
+            <li>Interior vacuuming</li>
+            <li>Foot mat cleaning</li>
+            <li>Foam wash</li>
+            <li>Underbody cleaning</li>
+            <li>Glass cleaning</li>
+            <li>Complete interior polishing (seats, dashboard, doors etc.)</li>
+            <li>Tyre & exterior black plastic part polishing</li>
+          </ul>
+          <p><strong>Prices:</strong> ₹400 (Small), ₹500 (Mid), ₹600 (Big)</p>
+        </li>
+        
+        <li>
+          <h3>Car Washing + 3M Wax</h3>
+          <p><strong>Duration:</strong> 1 to 1.30 hrs</p>
+          <p>Includes all Car Washing services plus complete exterior body wax coating with 3M Cream Wax</p>
+          <p><strong>Prices:</strong> ₹800 (Small), ₹1000 (Mid), ₹1200 (Big)</p>
+        </li>
+        
+        <li>
+          <h3>Dry Cleaning</h3>
+          <p><strong>Duration:</strong> 4 to 5 hrs</p>
+          <p><strong>Includes:</strong></p>
+          <ul>
+            <li>Seat removal & floor carpet deep clean</li>
+            <li>Roof & headliner cleaning</li>
+            <li>Dashboard & console detailed cleaning</li>
+            <li>Door panels & all interior plastics cleaning</li>
+            <li>Boot/trunk full sanitization</li>
+            <li>AC vents cleaning</li>
+            <li>Stain treatment for all visible spots</li>
+            <li>Chemical wash (removes stains, odors, microbes)</li>
+            <li>Complete sanitization of entire interior</li>
+            <li>Exterior car wash included as bonus</li>
+          </ul>
+          <p><strong>Prices:</strong> ₹1500 (Small), ₹2000 (Mid), ₹2500 (Big)</p>
+        </li>
+        
+        <li>
+          <h3>Dry Cleaning + Floor Mat Removal</h3>
+          <p>All Dry Cleaning services plus floor carpet removal, cleaning & drying</p>
+          <p><strong>Prices:</strong> ₹2000 (Small), ₹2500 (Mid), ₹3000 (Big)</p>
+        </li>
+        
+        <li>
+          <h3>Scratch Removal + Wax Coating</h3>
+          <p><strong>Includes:</strong></p>
+          <ul>
+            <li>3M clay wash</li>
+            <li>3M rubbing compound</li>
+            <li>3M polishing compound</li>
+            <li>Exterior & Interior wash</li>
+            <li>3M wax coating</li>
+            <li>6-Month shine warranty coverage</li>
+          </ul>
+          <p><strong>Prices:</strong> ₹2000 (Small), ₹3000 (Mid), ₹4000 (Big)</p>
+        </li>
+        
+        <li>
+          <h3>Anti-Rust Underbody Coating</h3>
+          <p>Underbody cleaning & preparation, rust inspection & treatment, 3M anti-rust primer application, 3M underbody coating with complete underbody protection</p>
+          <p><strong>Features:</strong> 2-3 years coating life, 1 year warranty coverage</p>
+          <p><strong>Price:</strong> ₹2000 for all car sizes</p>
+        </li>
+        
+        <li>
+          <h3>Trim Coating (1-3 weeks)</h3>
+          <p>Black plastic parts cleaning & degreasing, surface preparation, black plastic restorer application, deep penetration treatment, UV protection coating</p>
+          <p><strong>Duration:</strong> 3-4 weeks coating life</p>
+          <p><strong>Price:</strong> ₹500 for all car sizes</p>
+        </li>
+        
+        <li>
+          <h3>Trim Coating (4-6 months)</h3>
+          <p>Premium trim coating with 5-6 months coating life and free maintenance if coating fades within 4 months</p>
+          <p><strong>Prices:</strong> ₹2000 (Small), ₹2500 (Mid), ₹3000 (Big)</p>
+        </li>
+      </ul>
     </section>
-
-    <!-- Why Choose D3 Garage -->
-    <section>
-        <div class="container">
-            <h2 class="section-title">Why Choose D3 Garage?</h2>
-            <div class="reasons-grid">
-                <div class="reason-card">
-                    <div class="reason-icon">🏆</div>
-                    <h3>Service Centre Level Servicing</h3>
-                    <p>Professional quality service with complete transparency and genuine care</p>
-                </div>
-                <div class="reason-card">
-                    <div class="reason-icon">🚗</div>
-                    <h3>Free Pickup & Drop</h3>
-                    <p>Complimentary pickup and drop service within 5km radius</p>
-                </div>
-                <div class="reason-card">
-                    <div class="reason-icon">👨‍🔧</div>
-                    <h3>Trained & Skilled Technicians</h3>
-                    <p>Expert technicians with years of experience in automotive care</p>
-                </div>
-                <div class="reason-card">
-                    <div class="reason-icon">🔧</div>
-                    <h3>Modern Tools & Diagnostics</h3>
-                    <p>Latest equipment and diagnostic tools for precise service</p>
-                </div>
-                <div class="reason-card">
-                    <div class="reason-icon">💰</div>
-                    <h3>Transparent Pricing</h3>
-                    <p>No hidden charges, clear pricing structure for all services</p>
-                </div>
-                <div class="reason-card">
-                    <div class="reason-icon">⭐</div>
-                    <h3>Customer-First Approach</h3>
-                    <p>Your satisfaction is our priority with personalized service</p>
-                </div>
-                <div class="reason-card">
-                    <div class="reason-icon">⚡</div>
-                    <h3>Quick Turnaround</h3>
-                    <p>Fast service completion without compromising on quality</p>
-                </div>
-                <div class="reason-card">
-                    <div class="reason-icon">🎁</div>
-                    <h3>Referral Discounts</h3>
-                    <p>Get 10% discount on every successful referral you make</p>
-                </div>
-            </div>
-        </div>
+    
+    <section id="why-choose">
+      <h2>Why Choose D3 Garage?</h2>
+      <div class="why-choose">
+        <div class="reason">Service Centre Quality with Complete Transparency</div>
+        <div class="reason">Free Pickup & Drop within 5 km</div>
+        <div class="reason">Trained & Skilled Technicians</div>
+        <div class="reason">Modern Tools & Advanced Diagnostics</div>
+        <div class="reason">Genuine Products for Long-lasting Performance</div>
+        <div class="reason">Fast Service Turnaround (2-3 hours average)</div>
+        <div class="reason">Customer-First Approach & Affordable Prices</div>
+        <div class="reason">10% Discount on Every Referral</div>
+      </div>
     </section>
+    
+    <section id="contact">
+      <h2>Contact Us & Service Enquiry</h2>
+      <p><strong>Call us:</strong> +91 92119 57576, +91 92666 16298</p>
+      <p><strong>Address:</strong> D3 Garage, Amolik Chowk Sector-86, Faridabad - 121002</p>
+      
+      <form id="enquiry-form">
+        <h3>Service Enquiry Form</h3>
+        
+        <label for="name">Name *</label>
+        <input type="text" id="name" name="name" required />
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact-section">
-        <div class="container">
-            <h2 class="section-title">Contact & Service Enquiry</h2>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h3>Get In Touch</h3>
-                    <div class="contact-item">
-                        <h4>📍 Address</h4>
-                        <p>D3 Garage, Amolik Chowk Sector-86, Faridabad - 121002</p>
-                    </div>
-                    <div class="contact-item">
-                        <h4>📞 Phone Numbers</h4>
-                        <p>+91 92119 57576<br>+91 92666 16298</p>
-                    </div>
-                    <div class="contact-item">
-                        <h4>🏷️ Services</h4>
-                        <p>Detailing | Servicing | Denting & Painting | Insurance</p>
-                    </div>
-                    <div class="contact-item">
-                        <h4>🚚 Free Service</h4>
-                        <p>Free Pickup & Drop within 5km<br>10% Discount on every Referral!</p>
-                    </div>
-                </div>
+        <label for="phone">Phone Number *</label>
+        <input type="tel" id="phone" name="phone" required />
 
-                <form class="enquiry-form" id="enquiry-form" onsubmit="handleFormSubmit(event)">
-                    <h3 style="color: #ed181b; margin-bottom: 1.5rem; text-align: center;">Service Enquiry Form</h3>
-                    
-                    <div class="form-row">
-                            <div class="form-group">
-                            <label for="address">Address *</label>
-                            <textarea id="address" name="address" rows="3" required></textarea>
-                        </div>
+        <label for="carmodel">Car Model Name *</label>
+        <input type="text" id="carmodel" name="carmodel" required />
 
-                        <div class="form-group">
-                            <label for="serviceRequired">Service Required *</label>
-                            <select id="serviceRequired" name="serviceRequired" required>
-                                <option value="">Select Service</option>
-                                <option value="Car Washing">Car Washing (₹400-₹600)</option>
-                                <option value="Car Washing + 3M Wax">Car Washing + 3M Wax (₹800-₹1200)</option>
-                                <option value="Dry Cleaning">Dry Cleaning (₹1500-₹2500)</option>
-                                <option value="Dry Cleaning + Floor Mat Removal">Dry Cleaning + Floor Mat Removal (₹2000-₹3000)</option>
-                                <option value="Scratch Removal + Wax Coating">Scratch Removal + Wax Coating (₹2000-₹3000)</option>
-                                <option value="Anti-Rust Underbody Coating">Anti-Rust Underbody Coating (₹2000-₹4000)</option>
-                                <option value="Trim Coating (1-3 weeks)">Trim Coating (1-3 weeks) (₹500)</option>
-                                <option value="Trim Coating (4-6 months)">Trim Coating (4-6 months) (₹2000-₹3000)</option>
-                                <option value="Car Servicing">Car Servicing</option>
-                                <option value="Denting & Painting">Denting & Painting</option>
-                                <option value="Insurance Work">Insurance Work</option>
-                                <option value="Multiple Services">Multiple Services</option>
-                            </select>
-                        </div>
+        <label for="carplate">Car Plate Number *</label>
+        <input type="text" id="carplate" name="carplate" required />
 
-                        <div class="form-group">
-                            <label for="pickupDrop">Would you like free pickup & drop-off? (available within 5km) *</label>
-                            <select id="pickupDrop" name="pickupDrop" required>
-                                <option value="">Choose Option</option>
-                                <option value="Yes Sure!">Yes Sure!</option>
-                                <option value="No, I will visit D3 Garage">No, I will visit D3 Garage</option>
-                            </select>
-                        </div>
+        <label for="year">Year of Manufacturing *</label>
+        <input type="number" id="year" name="year" min="1990" max="2025" required />
 
-                        <div class="form-group">
-                            <label for="message">Additional Message</label>
-                            <textarea id="message" name="message" rows="4" placeholder="Any special requirements or additional information..."></textarea>
-                        </div>
+        <label for="address">Address *</label>
+        <textarea id="address" name="address" required></textarea>
 
-                        <button type="submit" class="submit-button">Submit Enquiry</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+        <label for="service">Service Required *</label>
+        <select id="service" name="service" required>
+          <option value="">Select a service...</option>
+          <option value="Car Washing">Car Washing</option>
+          <option value="Car Washing + 3M Wax">Car Washing + 3M Wax</option>
+          <option value="Dry Cleaning">Dry Cleaning</option>
+          <option value="Dry Cleaning + Floor Mat Removal">Dry Cleaning + Floor Mat Removal</option>
+          <option value="Scratch Removal + Wax Coating">Scratch Removal + Wax Coating</option>
+          <option value="Anti-Rust Underbody Coating">Anti-Rust Underbody Coating</option>
+          <option value="Trim Coating (1-3 weeks)">Trim Coating (1-3 weeks)</option>
+          <option value="Trim Coating (4-6 months)">Trim Coating (4-6 months)</option>
+          <option value="Car Servicing">Car Servicing</option>
+          <option value="Denting & Painting">Denting & Painting</option>
+          <option value="Insurance Work">Insurance Work</option>
+        </select>
+
+        <label for="pickupdrop">Would you like free pickup & drop-off (available within 5km)? *</label>
+        <select id="pickupdrop" name="pickupdrop" required>
+          <option value="">Select option...</option>
+          <option value="Yes Sure!">Yes Sure!</option>
+          <option value="No, I will visit D3 Garage">No, I will visit D3 Garage</option>
+        </select>
+
+        <label for="message">Additional Message</label>
+        <textarea id="message" name="message" placeholder="Any specific requirements or questions..."></textarea>
+
+        <button type="submit">Submit Enquiry</button>
+      </form>
     </section>
-
-    <!-- Scroll to Top Button -->
-    <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">↑</button>
-
-    <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Form submission handler
-        function handleFormSubmit(event) {
-            event.preventDefault();
-            
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData);
-            
-            // Create WhatsApp message
-            const message = `*D3 Garage Service Enquiry*
-            
-*Name:* ${data.name}
-*Phone:* ${data.phone}
-*Car Model:* ${data.carModel}
-*Plate Number:* ${data.plateNumber || 'Not provided'}
-*Year:* ${data.yearMfg || 'Not provided'}
-*Address:* ${data.address}
-*Service Required:* ${data.serviceRequired}
-*Pickup & Drop:* ${data.pickupDrop}
-*Additional Message:* ${data.message || 'None'}`;
-
-            const whatsappNumber = '919211957576';
-            const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-            
-            // Show success message
-            alert('Thank you for your enquiry! Redirecting to WhatsApp...');
-            
-            // Open WhatsApp
-            window.open(whatsappURL, '_blank');
-            
-            // Reset form
-            event.target.reset();
-        }
-
-        // Scroll to top functionality
-        window.addEventListener('scroll', function() {
-            const scrollToTop = document.getElementById('scrollToTop');
-            if (window.pageYOffset > 300) {
-                scrollToTop.classList.add('visible');
-            } else {
-                scrollToTop.classList.remove('visible');
-            }
-        });
-
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
-
-        // Add scroll effect to header
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.background = 'linear-gradient(135deg, #000000 0%, #1a1a1a 100%)';
-                header.style.boxShadow = '0 2px 20px rgba(237, 24, 27, 0.5)';
-            } else {
-                header.style.background = 'linear-gradient(135deg, #000000 0%, #1a1a1a 100%)';
-                header.style.boxShadow = '0 2px 20px rgba(237, 24, 27, 0.3)';
-            }
-        });
-
-        // Add loading animation to service cards
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.service-card, .reason-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
-            card.style.transition = 'all 0.6s ease';
-            observer.observe(card);
-        });
-
-        // Mobile menu toggle (for smaller screens)
-        function toggleMobileMenu() {
-            const navMenu = document.querySelector('.nav-menu');
-            navMenu.classList.toggle('mobile-active');
-        }
-
-        // Add mobile menu styles
-        const style = document.createElement('style');
-        style.textContent = `
-            @media (max-width: 768px) {
-                .nav-menu {
-                    position: fixed;
-                    top: 70px;
-                    right: -100%;
-                    width: 100%;
-                    height: calc(100vh - 70px);
-                    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-                    flex-direction: column;
-                    justify-content: flex-start;
-                    align-items: center;
-                    padding-top: 2rem;
-                    transition: right 0.3s ease;
-                }
-                
-                .nav-menu.mobile-active {
-                    right: 0;
-                }
-                
-                .nav-menu li {
-                    margin: 1rem 0;
-                }
-                
-                .nav-menu a {
-                    font-size: 1.2rem;
-                }
-                
-                .hamburger {
-                    display: block;
-                    background: none;
-                    border: none;
-                    color: white;
-                    font-size: 1.5rem;
-                    cursor: pointer;
-                }
-            }
-            
-            @media (min-width: 769px) {
-                .hamburger {
-                    display: none;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
+  </main>
 </body>
 </html>
-                            <label for="name">Name *</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number *</label>
-                            <input type="tel" id="phone" name="phone" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="carModel">Car Model Name *</label>
-                            <input type="text" id="carModel" name="carModel" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="plateNumber">Car Plate Number</label>
-                            <input type="text" id="plateNumber" name="plateNumber">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="yearMfg">Year of Manufacturing</label>
-                        <input type="number" id="yearMfg" name="yearMfg" min="1990" max="2025">
-                    </div>
-
-                    <div class="form-group">
